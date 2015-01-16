@@ -32,30 +32,31 @@ function preload() {
 
 
 // ---------------------------------------------------------------
-//			All needed variables for title environment
+//	On crée toutes les variables dont on aura besoin
 // ---------------------------------------------------------------
 
-// the pointer is only needed by some games
+//indique le sens de la boule
 var tmpPointer = new Phaser.Pointer(this.game, 3);
 
-// this includes all upperGate objects
+//partie haute du jeu
 var upperGate_Group;
-// this includes all lowerGate objects
+//partie base du jeu
 var lowerGate_Group;
+//sprite du canon
 var canon_Sprite;
-// this group holds all hud Elements, that should appear after "opening"
+var canonState = "init";
+//partie menu du jeu (inclus dans la partie haute du jeu)
 var hud_Group;
 var point0_Sprite;
 var point1_Sprite;
 var point2_Sprite;
-var canonState = "init";
-
+//défini le niveau initial ainsi que le nombre de points
 var points = 0;
 var level = 0;
 
-// data stored [0]=points [1]=name [2]=date
-//stores 3 highscroes
+//variable du score [0]=point [1]=nom [2]=date
 var highscore;
+var highscore_Group;
 var highscore_Texts = [];
 var highscoreMarker_Text;
 var highscoreCongrat_Text;
@@ -69,7 +70,6 @@ function getuserName() {
 
 
 // this group only contains the single letters for a text that has shifted letters
-var highscore_Group;
 var text_Group;
 var text_BG;
 
@@ -80,7 +80,7 @@ var yOffsetPerPx = 150 / 1080;
 var desktop_HitField;
 
 // ---------------------------------------------------------------
-//			The initial function that creates the scene
+//     Les fonctions permettant la mise en place de l'interface
 // ---------------------------------------------------------------
 
 function create() {
@@ -245,7 +245,7 @@ function create() {
 }
 
 // ---------------------------------------------------------------
-//				This function resets the entire game
+//	Cette fonction recommence une partie
 // ---------------------------------------------------------------
 
 function resetAll() {
@@ -258,8 +258,7 @@ function resetAll() {
 
 
 // ---------------------------------------------------------------
-//				This function starts the next level
-// 				it needs to reset any  game parameters
+//	change de niveau, remet les élements à leur place
 // ---------------------------------------------------------------
 
 function nextLevel() {
@@ -295,7 +294,7 @@ function nextLevel() {
 
 
 // ---------------------------------------------------------------
-//				This function allows to write angled text
+//	Permet d'écrire penché
 // ---------------------------------------------------------------
 
 function writeText(textComplete) {
@@ -318,7 +317,7 @@ function writeText(textComplete) {
 }
 
 // ---------------------------------------------------------------
-//		This function has all calls if the button is pressed
+//     Cette fonction est appellé après clic sur le bouton bleu
 // ---------------------------------------------------------------
 
 function canonPressed() {
@@ -361,7 +360,7 @@ function canonPressed() {
 
 
 // ---------------------------------------------------------------
-//		This function is always called by phaser on repaint
+//	Appellé après chaque tir
 // ---------------------------------------------------------------
 
 function update() {
@@ -387,7 +386,7 @@ function update() {
 
 
 // ---------------------------------------------------------------
-//		This function is called if the last line has a boules
+//	Fonction de perdant
 // ---------------------------------------------------------------
 
 function gameOver(showScore) {
@@ -414,7 +413,7 @@ function gameOver(showScore) {
 
 
 // ---------------------------------------------------------------
-// 				This function updates the points
+// 	Mets à jour le score
 // ---------------------------------------------------------------
 
 function updatePoints() {
