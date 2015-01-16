@@ -60,7 +60,9 @@ var highscoreMarker_Text;
 var highscoreCongrat_Text;
 
 
-function getuserName(){
+userName = "anonyme";
+
+function getuserName() {
     userName = document.getElementById("username").value;
 }
 
@@ -154,64 +156,64 @@ function create() {
     createHUDGame();
 
     // hide shadows and hud
-    upperGate_Group.getAt(0).visible = false;
+    upperGate_Group.getAt(0).visible = true;
     lowerGate_Group.getAt(0).visible = true;
     hud_Group.alpha = 0;
 
 
     {
-		var highscore_bgTrans = game.add.graphics(0, 0);
-		highscore_bgTrans.beginFill(0x000000);
-		highscore_bgTrans.moveTo(0, 0);
-		highscore_bgTrans.lineTo(game.world.width, 0);
-		highscore_bgTrans.lineTo(game.world.width, game.world.height);
-		highscore_bgTrans.lineTo(0, game.world.height);
-		highscore_bgTrans.lineTo(0, 0);
-		highscore_bgTrans.endFill();
-		highscore_bgTrans.alpha = 0.8;
-		highscore_Group.add(highscore_bgTrans);
+        var highscore_bgTrans = game.add.graphics(0, 0);
+        highscore_bgTrans.beginFill(0x000000);
+        highscore_bgTrans.moveTo(0, 0);
+        highscore_bgTrans.lineTo(game.world.width, 0);
+        highscore_bgTrans.lineTo(game.world.width, game.world.height);
+        highscore_bgTrans.lineTo(0, game.world.height);
+        highscore_bgTrans.lineTo(0, 0);
+        highscore_bgTrans.endFill();
+        highscore_bgTrans.alpha = 0.8;
+        highscore_Group.add(highscore_bgTrans);
 
-		var highscore_bg = game.add.graphics(0, 0);
-		highscore_bg.beginFill(0x000000);
-		highscore_bg.moveTo(50, 50);
-		highscore_bg.lineTo(game.world.width-50, 50);
-		highscore_bg.lineTo(game.world.width-50, 525);
-		highscore_bg.lineTo(50, 525);
-		highscore_bg.lineTo(50, 50);
-		highscore_bg.endFill();
-		highscore_bg.alpha = 0.8;
-		highscore_Group.add(highscore_bg);
+        var highscore_bg = game.add.graphics(0, 0);
+        highscore_bg.beginFill(0x000000);
+        highscore_bg.moveTo(50, 50);
+        highscore_bg.lineTo(game.world.width - 50, 50);
+        highscore_bg.lineTo(game.world.width - 50, 525);
+        highscore_bg.lineTo(50, 525);
+        highscore_bg.lineTo(50, 50);
+        highscore_bg.endFill();
+        highscore_bg.alpha = 0.8;
+        highscore_Group.add(highscore_bg);
 
-		var highscoreText_HL = game.add.text(game.world.centerX, 75, "HIGHSCORE", {font: "50pt PoetsenOne-Regular", fill: "#CECECE"});
-	    highscoreText_HL.anchor.x = 0.5;
-		highscore_Group.add(highscoreText_HL);
+        var highscoreText_HL = game.add.text(game.world.centerX, 75, "HIGHSCORE", {font: "50pt PoetsenOne-Regular", fill: "#CECECE"});
+        highscoreText_HL.anchor.x = 0.5;
+        highscore_Group.add(highscoreText_HL);
 
-		var highscoreP_Text = game.add.text(82, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-		highscore_Group.add(highscoreP_Text);
-		highscore_Texts[0] = highscoreP_Text;
-		var highscoreU_Text = game.add.text(165, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-		highscore_Group.add(highscoreU_Text);
-		highscore_Texts[1] = highscoreU_Text;
-		var highscoreD_Text = game.add.text(293, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-		highscore_Group.add(highscoreD_Text);
-		highscore_Texts[2] = highscoreD_Text;
+        var highscoreP_Text = game.add.text(82, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+        highscore_Group.add(highscoreP_Text);
+        highscore_Texts[0] = highscoreP_Text;
+        var highscoreU_Text = game.add.text(165, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+        highscore_Group.add(highscoreU_Text);
+        highscore_Texts[1] = highscoreU_Text;
+        var highscoreD_Text = game.add.text(293, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+        highscore_Group.add(highscoreD_Text);
+        highscore_Texts[2] = highscoreD_Text;
 
-		highscoreMarker_Text = game.add.text(62, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-		highscore_Group.add(highscoreMarker_Text);
+        highscoreMarker_Text = game.add.text(62, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+        highscore_Group.add(highscoreMarker_Text);
 
-		highscoreCongrat_Text = game.add.text(game.world.centerX, 425, "", {font: "26pt PoetsenOne-Regular", fill: "#CECECE"});
-	    highscoreCongrat_Text.anchor.x = 0.5;
-		highscore_Group.add(highscoreCongrat_Text);
+        highscoreCongrat_Text = game.add.text(game.world.centerX, 425, "", {font: "26pt PoetsenOne-Regular", fill: "#CECECE"});
+        highscoreCongrat_Text.anchor.x = 0.5;
+        highscore_Group.add(highscoreCongrat_Text);
 
-		// add the close button
-		var closeHighscore_Sprite = game.add.sprite(game.world.width-50, 50, 'closeButton');
-		closeHighscore_Sprite.anchor.set(0.5);
-		closeHighscore_Sprite.scale.set(0.4);
-		closeHighscore_Sprite.inputEnabled = true;
-		closeHighscore_Sprite.events.onInputDown.add(hideHighscore, this);
-		highscore_Group.add(closeHighscore_Sprite);
+        // add the close button
+        var closeHighscore_Sprite = game.add.sprite(game.world.width - 50, 50, 'closeButton');
+        closeHighscore_Sprite.anchor.set(0.5);
+        closeHighscore_Sprite.scale.set(0.4);
+        closeHighscore_Sprite.inputEnabled = true;
+        closeHighscore_Sprite.events.onInputDown.add(hideHighscore, this);
+        highscore_Group.add(closeHighscore_Sprite);
 
-		highscore_Group.visible = false;
+        highscore_Group.visible = false;
     }
 
     text_BG = game.add.graphics(0, 0);
@@ -229,7 +231,7 @@ function create() {
     desktop_HitField.inputEnabled = true;
     desktop_HitField.events.onInputDown.add(canonPressed, this);
     desktop_HitField.visible = true;
-    
+
     highscore = [0, "Nacim", "-", 0, "Bastien", "-", 0, "Yann", "-"];
 
     game.world.bringToTop(upperGate_Group);
@@ -359,8 +361,7 @@ function canonPressed() {
     // for the initial state
     if (canonState == "init") {
 
-        if (game.device.desktop)
-            desktop_HitField.visible = true;
+        desktop_HitField.visible = true;
 
         var lowerGate = game.add.tween(lowerGate_Group);
         lowerGate.to({y: 350}, 1500, Phaser.Easing.Bounce.Out);
@@ -428,7 +429,7 @@ function update() {
 // ---------------------------------------------------------------
 
 function gameOver() {
-    
+
     postHighScore();
 
     var lowerGate = game.add.tween(lowerGate_Group);
@@ -468,48 +469,48 @@ function updatePoints() {
 // 	Cette fonction permet un tableau de score
 // ---------------------------------------------------------------
 
-function postHighScore(){
-	var date = new Date();
+function postHighScore() {
+    var date = new Date();
 
-	if(points > highscore[0]){
-		highscoreMarker_Text.alpha = 1;
-		highscore = [points, userName, date.toLocaleDateString("en-GB"), highscore[0], highscore[1], highscore[2], highscore[3], highscore[4], highscore[5]];
-		highscoreMarker_Text.text = "\n>                                                       <";
-		game.add.tween(highscoreMarker_Text).to( { alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
-		highscoreCongrat_Text.text = "Nouveau record";
-	}else if(points > highscore[3]){
-		highscoreMarker_Text.alpha = 1;
-		highscore = [highscore[0], highscore[1], highscore[2], points, userName, date.toLocaleDateString("en-GB"), highscore[3], highscore[4], highscore[5]];
-		highscoreMarker_Text.text = "\n\n>                                                       <";
-		game.add.tween(highscoreMarker_Text).to( { alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
-		highscoreCongrat_Text.text = "Excellent";
-	}else if(points > highscore[6]){
-		highscoreMarker_Text.alpha = 1;
-		highscore[6] = points;
-		highscore[7] = userName;
-		highscore[8] = date.toLocaleDateString("en-GB");
-		highscoreMarker_Text.text = "\n\n\n>                                                       <";
-		game.add.tween(highscoreMarker_Text).to( { alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
-		highscoreCongrat_Text.text = "Good";
-	}
+    if (points > highscore[0]) {
+        highscoreMarker_Text.alpha = 1;
+        highscore = [points, userName, date.toLocaleDateString("en-GB"), highscore[0], highscore[1], highscore[2], highscore[3], highscore[4], highscore[5]];
+        highscoreMarker_Text.text = "\n>                                                       <";
+        game.add.tween(highscoreMarker_Text).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
+        highscoreCongrat_Text.text = "Nouveau record";
+    } else if (points > highscore[3]) {
+        highscoreMarker_Text.alpha = 1;
+        highscore = [highscore[0], highscore[1], highscore[2], points, userName, date.toLocaleDateString("en-GB"), highscore[3], highscore[4], highscore[5]];
+        highscoreMarker_Text.text = "\n\n>                                                       <";
+        game.add.tween(highscoreMarker_Text).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
+        highscoreCongrat_Text.text = "Excellent";
+    } else if (points > highscore[6]) {
+        highscoreMarker_Text.alpha = 1;
+        highscore[6] = points;
+        highscore[7] = userName;
+        highscore[8] = date.toLocaleDateString("en-GB");
+        highscoreMarker_Text.text = "\n\n\n>                                                       <";
+        game.add.tween(highscoreMarker_Text).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
+        highscoreCongrat_Text.text = "Bien";
+    }
 
-	localStorage.setItem("highscore", JSON.stringify(highscore));
+    localStorage.setItem("highscore", JSON.stringify(highscore));
 
-	showHighscore();
+    showHighscore();
 }
 
-function showHighscore(){
-	game.world.bringToTop(highscore_Group);
-	var score0 = ('000000000' + highscore[0]).substr(-3); 
-	var score1 = ('000000000' + highscore[3]).substr(-3); 
-	var score2 = ('000000000' + highscore[6]).substr(-3); 
-	highscore_Texts[0].text = "\n" + score0 + "\n" + score1 + "\n" + score2;
-	highscore_Texts[1].text = "\n" + highscore[1] + "\n" + highscore[4] + "\n" + highscore[7];
-	highscore_Texts[2].text = "\n" + highscore[2] + "\n" + highscore[5] + "\n" + highscore[8];
+function showHighscore() {
+    game.world.bringToTop(highscore_Group);
+    var score0 = ('000000000' + highscore[0]).substr(-3);
+    var score1 = ('000000000' + highscore[3]).substr(-3);
+    var score2 = ('000000000' + highscore[6]).substr(-3);
+    highscore_Texts[0].text = "\n" + score0 + "\n" + score1 + "\n" + score2;
+    highscore_Texts[1].text = "\n" + highscore[1] + "\n" + highscore[4] + "\n" + highscore[7];
+    highscore_Texts[2].text = "\n" + highscore[2] + "\n" + highscore[5] + "\n" + highscore[8];
 
-	highscore_Group.visible = true;
+    highscore_Group.visible = true;
 }
 
-function hideHighscore(){
-	highscore_Group.visible = false;
+function hideHighscore() {
+    highscore_Group.visible = false;
 }
