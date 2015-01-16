@@ -107,7 +107,7 @@ function createLine() {
 
     for (var i = 0; i < fieldWidth; ++i) {
         if (targets_Group.getAt((fieldHeight - 1) * fieldWidth + i).alive) {
-            gameOver();
+            gameOver(true);
             return;
         }
     }
@@ -174,7 +174,7 @@ function checkSimilarities(posX, posY, frame) {
 
     for (var i = 0; i < fieldWidth; ++i) {
         if (targets_Group.getAt(fieldHeight * fieldWidth + i).alive) {
-            gameOver();
+            gameOver(true);
             return;
         }
     }

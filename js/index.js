@@ -16,6 +16,7 @@ function preload() {
     game.load.image('closeButton', 'img/close.png');
     game.load.image('pauseButton', 'img/pause.png');
     game.load.image('canon', 'img/canon.png');
+    game.load.image('resetButton', 'img/reset.png');
     game.load.spritesheet('point', 'img/points.png', 80, 98);
     game.load.spritesheet('boules', 'img/boules.png', 101, 115);
     game.load.image('pointer', 'img/pointer.png');
@@ -60,7 +61,7 @@ var highscoreMarker_Text;
 var highscoreCongrat_Text;
 
 
-userName = "anonyme";
+userName = "-";
 
 function getuserName() {
     userName = document.getElementById("username").value;
@@ -84,7 +85,7 @@ var desktop_HitField;
 
 function create() {
 
-    game.add.tileSprite(0, 0, gameWidth, gameHeight, 'background3');
+    game.add.tileSprite(0, 0, gameWidth, gameHeight, 'background4');
 
     upperGate_Group = game.add.group();
     lowerGate_Group = game.add.group();
@@ -94,7 +95,7 @@ function create() {
 
     createGame();
 
-    // add a new graphics object (polygon)
+    //crée la partie haute du jeu (celle avec le score)
     var upperGate_back = new Phaser.Graphics(game, 0, 0);
     upperGate_back.beginFill(0xF3F3F3);
     upperGate_back.moveTo(0, 0);
@@ -104,22 +105,27 @@ function create() {
     upperGate_back.lineTo(0, 0);
     upperGate_back.endFill();
 
-    // add the logo to the upperGate
+    //crée le titre du jeu
     title = game.add.sprite(game.world.centerX, game.world.centerY - 250, 'title');
     title.anchor.set(0.5);
     title.scale.set(0.6);
 
-    // add a new graphics object (polygon)
+    //crée la planche basse du niveau (celle composé du lanceur)
     var lowerGate_back = new Phaser.Graphics(game, 0, 0);
     lowerGate_back.beginFill(0xF3F3F3);
     lowerGate_back.moveTo(0, game.world.height);
     lowerGate_back.lineTo(game.world.width, game.world.height);
-    lowerGate_back.lineTo(game.world.width, 349);
-    lowerGate_back.lineTo(0, 424);
+    lowerGate_back.lineTo(game.world.width, 350);
+    lowerGate_back.lineTo(0, 425);
     lowerGate_back.lineTo(0, 0);
     lowerGate_back.endFill();
+    
+    //crée le bouton reset
+    reset_Sprite = game.add.sprite(450, 25, 'resetButton', 0);
+    reset_Sprite.anchor.set(0.5);
+    reset_Sprite.scale.set(0.4);
 
-    // add the points display
+    //crée le score
     point0_Sprite = game.add.sprite(40, 65, 'point', 0);
     point0_Sprite.anchor.set(0.5);
     point0_Sprite.scale.set(0.4, 0.55);
@@ -130,7 +136,7 @@ function create() {
     point2_Sprite.anchor.set(0.5);
     point2_Sprite.scale.set(0.4, 0.55);
 
-    // add the button to the lowerGate
+    //ajoute le canon à la partie basse
     canon_Sprite = game.add.sprite(game.world.centerX, game.world.centerY - 35, 'canon');
     canon_Sprite.anchor.set(0.5);
     canon_Sprite.scale.setTo(0.425, 0.425);
@@ -143,7 +149,7 @@ function create() {
     canon_Sprite.input.allowHorizontalDrag = false;
     canon_Sprite.isMoving = false;
 
-    // add all things into groups
+    //ajoute tout les composants aux différentes parties
     upperGate_Group.add(upperGate_back);
     upperGate_Group.add(title);
     upperGate_Group.cacheAsBitmap = true;
@@ -152,12 +158,11 @@ function create() {
     hud_Group.add(point0_Sprite);
     hud_Group.add(point1_Sprite);
     hud_Group.add(point2_Sprite);
+    hud_Group.add(reset_Sprite);
 
     createHUDGame();
 
-    // hide shadows and hud
-    upperGate_Group.getAt(0).visible = true;
-    lowerGate_Group.getAt(0).visible = true;
+    //cache les élements du menu lorsque le panneau est fermé
     hud_Group.alpha = 0;
 
 
@@ -247,7 +252,7 @@ function resetAll() {
 
     updateColorGame();
 
-    gameOver();
+    gameOver(false);
 
 }
 
@@ -330,16 +335,15 @@ function canonPressed() {
         raiseGate.to({y: -300}, 1500, Phaser.Easing.Bounce.Out);
         raiseGate.start();
 
-        // show shadows
-        upperGate_Group.getAt(0).visible = true;
-        lowerGate_Group.getAt(0).visible = true;
-
         // show hud
         game.add.tween(hud_Group).to({alpha: 1}, 1500, Phaser.Easing.Linear.None, true, 1500);
 
         // Reset level and points
         points = 0;
         updatePoints();
+        
+        reset_Sprite.inputEnabled = true;
+	reset_Sprite.events.onInputDown.add(resetAll, this);
 
         level = 0;
 
@@ -386,9 +390,11 @@ function update() {
 //		This function is called if the last line has a boules
 // ---------------------------------------------------------------
 
-function gameOver() {
+function gameOver(showScore) {
 
-    postHighScore();
+    if(showScore){
+        postHighScore();
+    }
 
     var lowerGate = game.add.tween(lowerGate_Group);
     lowerGate.to({y: 0}, 1500, Phaser.Easing.Bounce.Out);
@@ -397,10 +403,6 @@ function gameOver() {
     var raiseGate = game.add.tween(upperGate_Group);
     raiseGate.to({y: 0}, 1500, Phaser.Easing.Bounce.Out);
     raiseGate.start();
-
-    // hide shadows
-    upperGate_Group.getAt(0).visible = false;
-    lowerGate_Group.getAt(0).visible = false;
 
     // hide hud
     hud_Group.alpha = 0;
