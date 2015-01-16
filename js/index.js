@@ -137,7 +137,7 @@ function create() {
     canon_Sprite.inputEnabled = true;
     canon_Sprite.events.onInputDown.add(canonPressed, this);
     canon_Sprite.input.enableDrag();
-    canon_Sprite.events.onDragStop.add(dragStopped, this);
+    canon_Sprite.events.onDragStop.add(shoot, this);
 
     canon_Sprite.input.allowVerticalDrag = false;
     canon_Sprite.input.allowHorizontalDrag = false;
@@ -239,52 +239,11 @@ function create() {
     game.world.bringToTop(hud_Group);
 }
 
-
-
-// ---------------------------------------------------------------
-//				This functions for handling dragging
-// ---------------------------------------------------------------
-
-function dragStopped() {
-
-    if (!canon_Sprite.isMoving) {
-        var xDiff = game.world.centerX - game.input.x;
-        var yDiff = game.world.centerY - game.input.y;
-
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {
-            canon_Sprite.isMoving = true;
-            if (xDiff < 0) {
-                game.add.tween(canon_Sprite).to({x: game.world.centerX + 75}, 200, Phaser.Easing.Quadratic.Out, true, 0, 0, true);
-            } else {
-                game.add.tween(canon_Sprite).to({x: game.world.centerX - 75}, 200, Phaser.Easing.Quadratic.Out, true, 0, 0, true);
-            }
-            setTimeout("canon_Sprite.isMoving = false;", 401);
-        }
-        if (Math.abs(xDiff) < Math.abs(yDiff)) {
-            canon_Sprite.isMoving = true;
-            if (yDiff < 0) {
-                game.add.tween(canon_Sprite).to({y: game.world.centerY - 35 + 75}, 200, Phaser.Easing.Quadratic.Out, true, 0, 0, true);
-            } else {
-                game.add.tween(canon_Sprite).to({y: game.world.centerY - 35 - 75}, 200, Phaser.Easing.Quadratic.Out, true, 0, 0, true);
-            }
-            setTimeout("canon_Sprite.isMoving = false;", 401);
-        }
-
-    }
-
-    shoot();
-}
-
-
-
 // ---------------------------------------------------------------
 //				This function resets the entire game
 // ---------------------------------------------------------------
 
 function resetAll() {
-
-    // load local data
-    loadSettings();
 
     updateColorGame();
 
@@ -395,7 +354,6 @@ function canonPressed() {
 
     }
 }
-
 
 
 // ---------------------------------------------------------------
