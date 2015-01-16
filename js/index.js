@@ -69,11 +69,11 @@ function getuserName() {
 }
 
 
-// this group only contains the single letters for a text that has shifted letters
+//Contient seulement des lettres à affichés
 var text_Group;
 var text_BG;
 
-// rotation of the device
+//calcule la rotation pour calculer la trajectoire
 var rotation;
 
 var yOffsetPerPx = 150 / 1080;
@@ -301,14 +301,14 @@ function writeText(textComplete) {
     for (var j = 0; j < textComplete.length; ++j) {
         var letter = game.add.text(0, -10 - (j * 50) * yOffsetPerPx, textComplete.substr(j, 1));
         letter.x = j * 50;
-        // letter.align = 'center';
+        //Centrer
         letter.anchor.x = 0.5;
 
-        //	Font style
+        //Font
         letter.font = 'PoetsenOne-Regular';
         letter.fontSize = 50;
 
-        //	Stroke color and thickness
+        //Epaisseur
         letter.stroke = '#000000';
         letter.strokeThickness = 3;
         letter.fill = '#CECECE';
@@ -321,7 +321,7 @@ function writeText(textComplete) {
 // ---------------------------------------------------------------
 
 function canonPressed() {
-    // for the initial state
+    //Ouvre les panneaux après clic
     if (canonState == "init") {
 
         desktop_HitField.visible = true;
@@ -358,7 +358,6 @@ function canonPressed() {
     }
 }
 
-
 // ---------------------------------------------------------------
 //	Appellé après chaque tir
 // ---------------------------------------------------------------
@@ -382,8 +381,6 @@ function update() {
 
     updateGame();
 }
-
-
 
 // ---------------------------------------------------------------
 //	Fonction de perdant
@@ -452,8 +449,6 @@ function postHighScore() {
         game.add.tween(highscoreMarker_Text).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
         highscoreCongrat_Text.text = "Bien";
     }
-
-    localStorage.setItem("highscore", JSON.stringify(highscore));
 
     showHighscore();
 }
