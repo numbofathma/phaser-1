@@ -13,8 +13,10 @@ function preload() {
     game.load.image('background3', 'img/background3.jpg');
     game.load.image('background4', 'img/background4.jpg');
     game.load.image('title', 'img/title.png');
+    game.load.image('closeButton', 'img/close.png');
+    game.load.image('pauseButton', 'img/pause.png');
     game.load.image('canon', 'img/canon.png');
-    game.load.spritesheet('pointsCollection', 'img/points.png', 80, 98);
+    game.load.spritesheet('point', 'img/points.png', 80, 98);
     game.load.spritesheet('boules', 'img/boules.png', 101, 115);
     game.load.image('pointer', 'img/pointer.png');
     game.load.image('warningLine', 'img/warningLine.png');
@@ -50,7 +52,21 @@ var canonState = "init";
 var points = 0;
 var level = 0;
 
+// data stored [0]=points [1]=name [2]=date
+//stores 3 highscroes
+var highscore;
+var highscore_Texts = [];
+var highscoreMarker_Text;
+var highscoreCongrat_Text;
+
+
+function getuserName(){
+    userName = document.getElementById("username").value;
+}
+
+
 // this group only contains the single letters for a text that has shifted letters
+var highscore_Group;
 var text_Group;
 var text_BG;
 
@@ -66,40 +82,19 @@ var desktop_HitField;
 
 function create() {
 
-    game.add.tileSprite(0, 0, gameWidth, gameHeight, 'background1');
+    game.add.tileSprite(0, 0, gameWidth, gameHeight, 'background3');
 
     upperGate_Group = game.add.group();
     lowerGate_Group = game.add.group();
     hud_Group = game.add.group();
+    highscore_Group = game.add.group();
     text_Group = game.add.group();
 
     createGame();
 
     // add a new graphics object (polygon)
-    var lowerGate_backSh = game.add.graphics(0, 0);
-    lowerGate_backSh.beginFill(0x000000);
-    lowerGate_backSh.moveTo(0, game.world.height);
-    lowerGate_backSh.lineTo(game.world.width, game.world.height);
-    lowerGate_backSh.lineTo(game.world.width, 340);
-    lowerGate_backSh.lineTo(0, 700);
-    lowerGate_backSh.lineTo(0, 0);
-    lowerGate_backSh.endFill();
-    lowerGate_backSh.alpha = 0.2;
-
-    // add a new graphics object (polygon)
-    var upperGate_backSh = game.add.graphics(0, 0);
-    upperGate_backSh.beginFill(0x000000);
-    upperGate_backSh.moveTo(0, 0);
-    upperGate_backSh.lineTo(game.world.width, 0);
-    upperGate_backSh.lineTo(game.world.width, 360);
-    upperGate_backSh.lineTo(0, 435);
-    upperGate_backSh.lineTo(0, 0);
-    upperGate_backSh.endFill();
-    upperGate_backSh.alpha = 0.2;
-
-    // add a new graphics object (polygon)
     var upperGate_back = new Phaser.Graphics(game, 0, 0);
-    upperGate_back.beginFill(0xE5E5E5);
+    upperGate_back.beginFill(0xF3F3F3);
     upperGate_back.moveTo(0, 0);
     upperGate_back.lineTo(game.world.width, 0);
     upperGate_back.lineTo(game.world.width, 350);
@@ -110,7 +105,7 @@ function create() {
     // add the logo to the upperGate
     title = game.add.sprite(game.world.centerX, game.world.centerY - 250, 'title');
     title.anchor.set(0.5);
-    title.scale.set(0.5);
+    title.scale.set(0.6);
 
     // add a new graphics object (polygon)
     var lowerGate_back = new Phaser.Graphics(game, 0, 0);
@@ -123,13 +118,13 @@ function create() {
     lowerGate_back.endFill();
 
     // add the points display
-    point0_Sprite = game.add.sprite(40, 65, 'pointsCollection', 0);
+    point0_Sprite = game.add.sprite(40, 65, 'point', 0);
     point0_Sprite.anchor.set(0.5);
     point0_Sprite.scale.set(0.4, 0.55);
-    point1_Sprite = game.add.sprite(75, 65 - 35 * yOffsetPerPx, 'pointsCollection', 0);
+    point1_Sprite = game.add.sprite(75, 65 - 35 * yOffsetPerPx, 'point', 0);
     point1_Sprite.anchor.set(0.5);
     point1_Sprite.scale.set(0.4, 0.55);
-    point2_Sprite = game.add.sprite(110, 65 - 70 * yOffsetPerPx, 'pointsCollection', 0);
+    point2_Sprite = game.add.sprite(110, 65 - 70 * yOffsetPerPx, 'point', 0);
     point2_Sprite.anchor.set(0.5);
     point2_Sprite.scale.set(0.4, 0.55);
 
@@ -147,11 +142,9 @@ function create() {
     canon_Sprite.isMoving = false;
 
     // add all things into groups
-    upperGate_Group.add(upperGate_backSh);
     upperGate_Group.add(upperGate_back);
     upperGate_Group.add(title);
     upperGate_Group.cacheAsBitmap = true;
-    lowerGate_Group.add(lowerGate_backSh);
     lowerGate_Group.add(lowerGate_back);
     lowerGate_Group.add(canon_Sprite);
     hud_Group.add(point0_Sprite);
@@ -162,9 +155,64 @@ function create() {
 
     // hide shadows and hud
     upperGate_Group.getAt(0).visible = false;
-    lowerGate_Group.getAt(0).visible = false;
+    lowerGate_Group.getAt(0).visible = true;
     hud_Group.alpha = 0;
 
+
+    {
+		var highscore_bgTrans = game.add.graphics(0, 0);
+		highscore_bgTrans.beginFill(0x000000);
+		highscore_bgTrans.moveTo(0, 0);
+		highscore_bgTrans.lineTo(game.world.width, 0);
+		highscore_bgTrans.lineTo(game.world.width, game.world.height);
+		highscore_bgTrans.lineTo(0, game.world.height);
+		highscore_bgTrans.lineTo(0, 0);
+		highscore_bgTrans.endFill();
+		highscore_bgTrans.alpha = 0.8;
+		highscore_Group.add(highscore_bgTrans);
+
+		var highscore_bg = game.add.graphics(0, 0);
+		highscore_bg.beginFill(0x000000);
+		highscore_bg.moveTo(50, 50);
+		highscore_bg.lineTo(game.world.width-50, 50);
+		highscore_bg.lineTo(game.world.width-50, 525);
+		highscore_bg.lineTo(50, 525);
+		highscore_bg.lineTo(50, 50);
+		highscore_bg.endFill();
+		highscore_bg.alpha = 0.8;
+		highscore_Group.add(highscore_bg);
+
+		var highscoreText_HL = game.add.text(game.world.centerX, 75, "HIGHSCORE", {font: "50pt PoetsenOne-Regular", fill: "#CECECE"});
+	    highscoreText_HL.anchor.x = 0.5;
+		highscore_Group.add(highscoreText_HL);
+
+		var highscoreP_Text = game.add.text(82, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+		highscore_Group.add(highscoreP_Text);
+		highscore_Texts[0] = highscoreP_Text;
+		var highscoreU_Text = game.add.text(165, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+		highscore_Group.add(highscoreU_Text);
+		highscore_Texts[1] = highscoreU_Text;
+		var highscoreD_Text = game.add.text(293, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+		highscore_Group.add(highscoreD_Text);
+		highscore_Texts[2] = highscoreD_Text;
+
+		highscoreMarker_Text = game.add.text(62, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+		highscore_Group.add(highscoreMarker_Text);
+
+		highscoreCongrat_Text = game.add.text(game.world.centerX, 425, "", {font: "26pt PoetsenOne-Regular", fill: "#CECECE"});
+	    highscoreCongrat_Text.anchor.x = 0.5;
+		highscore_Group.add(highscoreCongrat_Text);
+
+		// add the close button
+		var closeHighscore_Sprite = game.add.sprite(game.world.width-50, 50, 'closeButton');
+		closeHighscore_Sprite.anchor.set(0.5);
+		closeHighscore_Sprite.scale.set(0.4);
+		closeHighscore_Sprite.inputEnabled = true;
+		closeHighscore_Sprite.events.onInputDown.add(hideHighscore, this);
+		highscore_Group.add(closeHighscore_Sprite);
+
+		highscore_Group.visible = false;
+    }
 
     text_BG = game.add.graphics(0, 0);
     text_BG.beginFill(0x000000);
@@ -181,6 +229,8 @@ function create() {
     desktop_HitField.inputEnabled = true;
     desktop_HitField.events.onInputDown.add(canonPressed, this);
     desktop_HitField.visible = true;
+    
+    highscore = [0, "Nacim", "-", 0, "Bastien", "-", 0, "Yann", "-"];
 
     game.world.bringToTop(upperGate_Group);
     game.world.bringToTop(lowerGate_Group);
@@ -233,7 +283,6 @@ function resetAll() {
 
     // load local data
     loadSettings();
-    loadProfile();
 
     updateColorGame();
 
@@ -252,7 +301,6 @@ function nextLevel() {
     level++;
 
     text_BG.y = 300;
-
 
     var levelText = "LEVEL " + level;
 
@@ -380,6 +428,8 @@ function update() {
 // ---------------------------------------------------------------
 
 function gameOver() {
+    
+    postHighScore();
 
     var lowerGate = game.add.tween(lowerGate_Group);
     lowerGate.to({y: 0}, 1500, Phaser.Easing.Bounce.Out);
@@ -412,4 +462,54 @@ function updatePoints() {
     point1_Sprite.frame = Math.floor((points % 100) / 10);
     point2_Sprite.frame = points % 10;
 
+}
+
+// ---------------------------------------------------------------
+// 	Cette fonction permet un tableau de score
+// ---------------------------------------------------------------
+
+function postHighScore(){
+	var date = new Date();
+
+	if(points > highscore[0]){
+		highscoreMarker_Text.alpha = 1;
+		highscore = [points, userName, date.toLocaleDateString("en-GB"), highscore[0], highscore[1], highscore[2], highscore[3], highscore[4], highscore[5]];
+		highscoreMarker_Text.text = "\n>                                                       <";
+		game.add.tween(highscoreMarker_Text).to( { alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
+		highscoreCongrat_Text.text = "Nouveau record";
+	}else if(points > highscore[3]){
+		highscoreMarker_Text.alpha = 1;
+		highscore = [highscore[0], highscore[1], highscore[2], points, userName, date.toLocaleDateString("en-GB"), highscore[3], highscore[4], highscore[5]];
+		highscoreMarker_Text.text = "\n\n>                                                       <";
+		game.add.tween(highscoreMarker_Text).to( { alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
+		highscoreCongrat_Text.text = "Excellent";
+	}else if(points > highscore[6]){
+		highscoreMarker_Text.alpha = 1;
+		highscore[6] = points;
+		highscore[7] = userName;
+		highscore[8] = date.toLocaleDateString("en-GB");
+		highscoreMarker_Text.text = "\n\n\n>                                                       <";
+		game.add.tween(highscoreMarker_Text).to( { alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 4, true);
+		highscoreCongrat_Text.text = "Good";
+	}
+
+	localStorage.setItem("highscore", JSON.stringify(highscore));
+
+	showHighscore();
+}
+
+function showHighscore(){
+	game.world.bringToTop(highscore_Group);
+	var score0 = ('000000000' + highscore[0]).substr(-3); 
+	var score1 = ('000000000' + highscore[3]).substr(-3); 
+	var score2 = ('000000000' + highscore[6]).substr(-3); 
+	highscore_Texts[0].text = "\n" + score0 + "\n" + score1 + "\n" + score2;
+	highscore_Texts[1].text = "\n" + highscore[1] + "\n" + highscore[4] + "\n" + highscore[7];
+	highscore_Texts[2].text = "\n" + highscore[2] + "\n" + highscore[5] + "\n" + highscore[8];
+
+	highscore_Group.visible = true;
+}
+
+function hideHighscore(){
+	highscore_Group.visible = false;
 }
