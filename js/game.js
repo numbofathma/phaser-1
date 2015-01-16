@@ -354,8 +354,8 @@ function createFallingBox(posX, posY) {
     var y = targets_Group.getAt(idx).y;
 
     var fallingBox = game.add.sprite(x, y, 'boules', targets_Group.getAt(idx).frame);
-    fallingBox.anchor.set(0);
-    fallingBox.scale.set(0);
+    fallingBox.anchor.set(0.5);
+    fallingBox.scale.set(0.5);
     fallingBox_Group.add(fallingBox);
 
     removeBox(idx);

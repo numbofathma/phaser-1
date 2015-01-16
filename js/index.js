@@ -27,6 +27,11 @@ function preload() {
     game.scale.pageAlignVertically = true;
     game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     game.scale.setScreenSize();
+    
+    scaleFactor = game.scale.width/gameWidth;
+
+    game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
+    game.scale.setUserScale(scaleFactor, scaleFactor, 0, 0);
 
 }
 
@@ -62,12 +67,8 @@ var highscoreMarker_Text;
 var highscoreCongrat_Text;
 
 
-userName = "-";
-
-function getuserName() {
-    userName = document.getElementById("username").value;
-}
-
+var userInput = document.getElementById("username");
+var userName = "-";
 
 //Contient seulement des lettres à affichés
 var text_Group;
@@ -87,6 +88,7 @@ function create() {
 
     game.add.tileSprite(0, 0, gameWidth, gameHeight, 'background4');
 
+    pause_Group = game.add.group();
     upperGate_Group = game.add.group();
     lowerGate_Group = game.add.group();
     hud_Group = game.add.group();
@@ -115,8 +117,8 @@ function create() {
     lowerGate_back.beginFill(0xF3F3F3);
     lowerGate_back.moveTo(0, game.world.height);
     lowerGate_back.lineTo(game.world.width, game.world.height);
-    lowerGate_back.lineTo(game.world.width, 350);
-    lowerGate_back.lineTo(0, 425);
+    lowerGate_back.lineTo(game.world.width, 349);
+    lowerGate_back.lineTo(0, 424);
     lowerGate_back.lineTo(0, 0);
     lowerGate_back.endFill();
     
@@ -124,6 +126,39 @@ function create() {
     reset_Sprite = game.add.sprite(450, 25, 'resetButton', 0);
     reset_Sprite.anchor.set(0.5);
     reset_Sprite.scale.set(0.4);
+    
+    var pause_bg = game.add.graphics(0, 0);
+    pause_bg.beginFill(0x000000);
+    pause_bg.moveTo(0, 0);
+    pause_bg.lineTo(game.world.width, 0);
+    pause_bg.lineTo(game.world.width, game.world.height);
+    pause_bg.lineTo(0, game.world.height);
+    pause_bg.lineTo(0, 0);
+    pause_bg.endFill();
+    pause_bg.alpha = 0.8;
+    pause_Group.add(pause_bg);
+
+    // add the close button
+    var close_Sprite = game.add.sprite(510, 25, 'closeButton', 0);
+    close_Sprite.anchor.set(0.5);
+    close_Sprite.scale.set(0.4);
+    close_Sprite.inputEnabled = true;
+    close_Sprite.events.onInputDown.add(closeButtonPressed, this);
+    pause_Group.add(close_Sprite);
+
+    pause_Group.y = game.world.height;
+    
+    //crée le bouton pause
+    pause_Sprite = game.add.sprite(510, 25, 'pauseButton', 0);
+    pause_Sprite.anchor.set(0.5);
+    pause_Sprite.scale.set(0.4);
+    
+    userInput.style.left = (game.scale.offset.x + (325 * scaleFactor)) + "px";
+    userInput.style.top = (game.scale.offset.y + (100 * scaleFactor)) + "px";
+    userInput.style.width = (125 * scaleFactor) + "px";
+    userInput.style.height = (25 * scaleFactor) + "px";
+    userInput.style.borderRadius = (20 * scaleFactor) + "px";
+
 
     //crée le score
     point0_Sprite = game.add.sprite(40, 65, 'point', 0);
@@ -159,6 +194,7 @@ function create() {
     hud_Group.add(point1_Sprite);
     hud_Group.add(point2_Sprite);
     hud_Group.add(reset_Sprite);
+    hud_Group.add(pause_Sprite);
 
     createHUDGame();
 
@@ -166,60 +202,57 @@ function create() {
     hud_Group.alpha = 0;
 
 
-    {
-        var highscore_bgTrans = game.add.graphics(0, 0);
-        highscore_bgTrans.beginFill(0x000000);
-        highscore_bgTrans.moveTo(0, 0);
-        highscore_bgTrans.lineTo(game.world.width, 0);
-        highscore_bgTrans.lineTo(game.world.width, game.world.height);
-        highscore_bgTrans.lineTo(0, game.world.height);
-        highscore_bgTrans.lineTo(0, 0);
-        highscore_bgTrans.endFill();
-        highscore_bgTrans.alpha = 0.8;
-        highscore_Group.add(highscore_bgTrans);
+    var highscore_bgTrans = game.add.graphics(0, 0);
+    highscore_bgTrans.beginFill(0x000000);
+    highscore_bgTrans.moveTo(0, 0);
+    highscore_bgTrans.lineTo(game.world.width, 0);
+    highscore_bgTrans.lineTo(game.world.width, game.world.height);
+    highscore_bgTrans.lineTo(0, game.world.height);
+    highscore_bgTrans.lineTo(0, 0);
+    highscore_bgTrans.endFill();
+    highscore_bgTrans.alpha = 0.8;
+    highscore_Group.add(highscore_bgTrans);
 
-        var highscore_bg = game.add.graphics(0, 0);
-        highscore_bg.beginFill(0x000000);
-        highscore_bg.moveTo(50, 50);
-        highscore_bg.lineTo(game.world.width - 50, 50);
-        highscore_bg.lineTo(game.world.width - 50, 525);
-        highscore_bg.lineTo(50, 525);
-        highscore_bg.lineTo(50, 50);
-        highscore_bg.endFill();
-        highscore_bg.alpha = 0.8;
-        highscore_Group.add(highscore_bg);
+    var highscore_bg = game.add.graphics(0, 0);
+    highscore_bg.beginFill(0x000000);
+    highscore_bg.moveTo(50, 50);
+    highscore_bg.lineTo(game.world.width - 50, 50);
+    highscore_bg.lineTo(game.world.width - 50, 525);
+    highscore_bg.lineTo(50, 525);
+    highscore_bg.lineTo(50, 50);
+    highscore_bg.endFill();
+    highscore_bg.alpha = 0.8;
+    highscore_Group.add(highscore_bg);
 
-        var highscoreText_HL = game.add.text(game.world.centerX, 75, "HIGHSCORE", {font: "50pt PoetsenOne-Regular", fill: "#CECECE"});
-        highscoreText_HL.anchor.x = 0.5;
-        highscore_Group.add(highscoreText_HL);
+    var highscoreText_HL = game.add.text(game.world.centerX, 75, "HIGHSCORE", {font: "50pt PoetsenOne-Regular", fill: "#CECECE"});
+    highscoreText_HL.anchor.x = 0.5;
+    highscore_Group.add(highscoreText_HL);
 
-        var highscoreP_Text = game.add.text(82, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-        highscore_Group.add(highscoreP_Text);
-        highscore_Texts[0] = highscoreP_Text;
-        var highscoreU_Text = game.add.text(165, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-        highscore_Group.add(highscoreU_Text);
-        highscore_Texts[1] = highscoreU_Text;
-        var highscoreD_Text = game.add.text(293, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-        highscore_Group.add(highscoreD_Text);
-        highscore_Texts[2] = highscoreD_Text;
+    var highscoreP_Text = game.add.text(82, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    highscore_Group.add(highscoreP_Text);
+    highscore_Texts[0] = highscoreP_Text;
+    var highscoreU_Text = game.add.text(165, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    highscore_Group.add(highscoreU_Text);
+    highscore_Texts[1] = highscoreU_Text;
+    var highscoreD_Text = game.add.text(293, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    highscore_Group.add(highscoreD_Text);
+    highscore_Texts[2] = highscoreD_Text;
 
-        highscoreMarker_Text = game.add.text(62, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-        highscore_Group.add(highscoreMarker_Text);
+    highscoreMarker_Text = game.add.text(62, 175, "", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    highscore_Group.add(highscoreMarker_Text);
 
-        highscoreCongrat_Text = game.add.text(game.world.centerX, 425, "", {font: "26pt PoetsenOne-Regular", fill: "#CECECE"});
-        highscoreCongrat_Text.anchor.x = 0.5;
-        highscore_Group.add(highscoreCongrat_Text);
+    highscoreCongrat_Text = game.add.text(game.world.centerX, 425, "", {font: "26pt PoetsenOne-Regular", fill: "#CECECE"});
+    highscoreCongrat_Text.anchor.x = 0.5;
+    highscore_Group.add(highscoreCongrat_Text);
 
-        // add the close button
-        var closeHighscore_Sprite = game.add.sprite(game.world.width - 50, 50, 'closeButton');
-        closeHighscore_Sprite.anchor.set(0.5);
-        closeHighscore_Sprite.scale.set(0.4);
-        closeHighscore_Sprite.inputEnabled = true;
-        closeHighscore_Sprite.events.onInputDown.add(hideHighscore, this);
-        highscore_Group.add(closeHighscore_Sprite);
-
-        highscore_Group.visible = false;
-    }
+    // add the close button
+    var closeHighscore_Sprite = game.add.sprite(game.world.width - 50, 50, 'closeButton');
+    closeHighscore_Sprite.anchor.set(0.5);
+    closeHighscore_Sprite.scale.set(0.4);
+    closeHighscore_Sprite.inputEnabled = true;
+    closeHighscore_Sprite.events.onInputDown.add(hideHighscore, this);
+    highscore_Group.add(closeHighscore_Sprite);
+    highscore_Group.visible = false;
 
     text_BG = game.add.graphics(0, 0);
     text_BG.beginFill(0x000000);
@@ -254,6 +287,24 @@ function resetAll() {
 
     gameOver(false);
 
+}
+
+// ---------------------------------------------------------------
+//	Cette fonction affiche le menu de pause
+// ---------------------------------------------------------------
+
+function pauseButtonPressed(){
+    pause_Group.y = 0;
+    game.world.bringToTop(pause_Group);
+    userInput.style.visibility = "visible";
+}
+
+function closeButtonPressed(){
+	pause_Group.y = game.world.height;
+	userInput.style.visibility = "hidden";
+	userName = userInput.value.substring(0,7);
+	userInput.value = userName;
+	localStorage.setItem("userName", userName);
 }
 
 
@@ -341,8 +392,12 @@ function canonPressed() {
         points = 0;
         updatePoints();
         
+        //action lors de clic sur bouton reset
         reset_Sprite.inputEnabled = true;
 	reset_Sprite.events.onInputDown.add(resetAll, this);
+        //action lors de clic sur bouton pause
+        pause_Sprite.inputEnabled = true;
+	pause_Sprite.events.onInputDown.add(pauseButtonPressed, this);
 
         level = 0;
 

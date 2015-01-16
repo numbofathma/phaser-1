@@ -73,11 +73,11 @@ function createGame() {
 
     // particle emitter for exploding boxes
     emitter = game.add.emitter(0, 0, 100);
-    /*emitter.makeParticles('boules', 0);
+    emitter.makeParticles('boules', 0);
     emitter.setScale(0.5, 0, 0.5, 0, 1000);
     emitter.setAlpha(0.3, 0.5);
     emitter.minParticleSpeed.setTo(-200, -200);
-    emitter.maxParticleSpeed.setTo(200, 200);*/
+    emitter.maxParticleSpeed.setTo(200, 200);
 
 }
 
