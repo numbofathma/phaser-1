@@ -123,7 +123,7 @@ function create() {
     lowerGate_back.endFill();
     
     //crée le bouton reset
-    reset_Sprite = game.add.sprite(450, 25, 'resetButton', 0);
+    reset_Sprite = game.add.sprite(450, 30, 'resetButton', 0);
     reset_Sprite.anchor.set(0.5);
     reset_Sprite.scale.set(0.4);
     
@@ -155,12 +155,21 @@ function create() {
     pause_Sprite.scale.set(0.4);
     
     //tente de placer l'input correctement dans la fenêtre pause
-    userInput.style.left = (game.scale.offset.x + (325 * scaleFactor)) + "px";
-    userInput.style.top = (game.scale.offset.y + (100 * scaleFactor)) + "px";
-    userInput.style.width = (125 * scaleFactor) + "px";
+    var pauseText_User = game.add.text(100, 200, "Utilisateur", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    userInput.style.left = (game.scale.offset.x + (275 * scaleFactor)) + "px";
+    userInput.style.top = (game.scale.offset.y + (200 * scaleFactor)) + "px";
+    userInput.style.width = (150 * scaleFactor) + "px";
     userInput.style.height = (25 * scaleFactor) + "px";
     userInput.style.borderRadius = (20 * scaleFactor) + "px";
+    pause_Group.add(pauseText_User);
 
+    //ajoute les crédits
+    var pauseText_Credits1 = game.add.text(100, 520, "Gameplay\n\nGraphisme\nAudio\nTest", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    var pauseText_Credits2 = game.add.text(275, 520, "Nacim\nYann\nBastien\nBastien\nNacim", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    var pauseText_Credits3 = game.add.text(125, 400, "Crédits", {font: "64pt PoetsenOne-Regular", fill: "#CECECE"});
+    pause_Group.add(pauseText_Credits1);
+    pause_Group.add(pauseText_Credits2);
+    pause_Group.add(pauseText_Credits3);
 
     //crée le score
     point0_Sprite = game.add.sprite(40, 65, 'point', 0);
