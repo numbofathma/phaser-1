@@ -18,7 +18,7 @@ function preload() {
     game.load.image('canon', 'img/canon.png');
     game.load.image('resetButton', 'img/reset.png');
     game.load.spritesheet('point', 'img/points.png', 80, 98);
-    game.load.spritesheet('boules', 'img/boules.png', 102, 115);
+    game.load.spritesheet('boules', 'img/boules.png', 120, 120);
     game.load.image('pointer', 'img/pointer.png');
     game.load.image('warningLine', 'img/warningLine.png');
 
@@ -165,7 +165,7 @@ function create() {
 
     //ajoute les crédits
     var pauseText_Credits1 = game.add.text(100, 520, "Gameplay\n\nGraphisme\nAudio\nTest", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
-    var pauseText_Credits2 = game.add.text(275, 520, "Nacim\nYann\nBastien\nBastien\nNacim", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
+    var pauseText_Credits2 = game.add.text(275, 520, "Nacim\nYann\nBastien\nBastien\nNacim\nYann", {font: "24pt PoetsenOne-Regular", fill: "#CECECE"});
     var pauseText_Credits3 = game.add.text(125, 400, "Crédits", {font: "64pt PoetsenOne-Regular", fill: "#CECECE"});
     pause_Group.add(pauseText_Credits1);
     pause_Group.add(pauseText_Credits2);
