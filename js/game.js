@@ -26,7 +26,7 @@ var nextShoot = 0;
 var currentShootingBox = 1;
 
 var targets_Group;
-// this gruop just blocks the ceiling
+// this group just blocks the ceiling
 var ceilingBox_Group;
 // this group holds all falling stones after successful hit
 var fallingBox_Group;
