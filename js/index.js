@@ -18,7 +18,7 @@ function preload() {
     game.load.image('canon', 'img/canon.png');
     game.load.image('resetButton', 'img/reset.png');
     game.load.spritesheet('point', 'img/points.png', 80, 98);
-    game.load.spritesheet('boules', 'img/boules.png', 101, 115);
+    game.load.spritesheet('boules', 'img/boules.png', 102, 115);
     game.load.image('pointer', 'img/pointer.png');
     game.load.image('warningLine', 'img/warningLine.png');
 
@@ -127,6 +127,7 @@ function create() {
     reset_Sprite.anchor.set(0.5);
     reset_Sprite.scale.set(0.4);
     
+    //crée la fenêtre pause
     var pause_bg = game.add.graphics(0, 0);
     pause_bg.beginFill(0x000000);
     pause_bg.moveTo(0, 0);
@@ -138,7 +139,7 @@ function create() {
     pause_bg.alpha = 0.8;
     pause_Group.add(pause_bg);
 
-    // add the close button
+    //ajoute un bouton pour fermer cette fenêtre
     var close_Sprite = game.add.sprite(510, 25, 'closeButton', 0);
     close_Sprite.anchor.set(0.5);
     close_Sprite.scale.set(0.4);
@@ -153,6 +154,7 @@ function create() {
     pause_Sprite.anchor.set(0.5);
     pause_Sprite.scale.set(0.4);
     
+    //tente de placer l'input correctement dans la fenêtre pause
     userInput.style.left = (game.scale.offset.x + (325 * scaleFactor)) + "px";
     userInput.style.top = (game.scale.offset.y + (100 * scaleFactor)) + "px";
     userInput.style.width = (125 * scaleFactor) + "px";
@@ -201,18 +203,7 @@ function create() {
     //cache les élements du menu lorsque le panneau est fermé
     hud_Group.alpha = 0;
 
-
-    var highscore_bgTrans = game.add.graphics(0, 0);
-    highscore_bgTrans.beginFill(0x000000);
-    highscore_bgTrans.moveTo(0, 0);
-    highscore_bgTrans.lineTo(game.world.width, 0);
-    highscore_bgTrans.lineTo(game.world.width, game.world.height);
-    highscore_bgTrans.lineTo(0, game.world.height);
-    highscore_bgTrans.lineTo(0, 0);
-    highscore_bgTrans.endFill();
-    highscore_bgTrans.alpha = 0.8;
-    highscore_Group.add(highscore_bgTrans);
-
+    //crée la fenêtre d'Highscore
     var highscore_bg = game.add.graphics(0, 0);
     highscore_bg.beginFill(0x000000);
     highscore_bg.moveTo(50, 50);
@@ -300,11 +291,11 @@ function pauseButtonPressed(){
 }
 
 function closeButtonPressed(){
-	pause_Group.y = game.world.height;
-	userInput.style.visibility = "hidden";
-	userName = userInput.value.substring(0,7);
-	userInput.value = userName;
-	localStorage.setItem("userName", userName);
+    pause_Group.y = game.world.height;
+    userInput.style.visibility = "hidden";
+    userName = userInput.value.substring(0,7);
+    userInput.value = userName;
+    localStorage.setItem("userName", userName);
 }
 
 
@@ -315,6 +306,8 @@ function closeButtonPressed(){
 function nextLevel() {
 
     level++;
+    points += 10;
+    updatePoints();
 
     text_BG.y = 300;
 
@@ -331,11 +324,6 @@ function nextLevel() {
     game.world.bringToTop(text_Group);
     game.add.tween(text_BG).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 2000);
     game.add.tween(text_Group).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true, 2000);
-
-    if (level > 1) {
-        points += 10;
-        updatePoints();
-    }
 
     canon_Sprite.x = game.world.centerX;
     canon_Sprite.y = game.world.centerY - 35;
@@ -381,11 +369,11 @@ function canonPressed() {
         lowerGate.to({y: 350}, 1500, Phaser.Easing.Bounce.Out);
         lowerGate.start();
 
-        var raiseGate = game.add.tween(upperGate_Group);
-        raiseGate.to({y: -300}, 1500, Phaser.Easing.Bounce.Out);
-        raiseGate.start();
+        var upperGate = game.add.tween(upperGate_Group);
+        upperGate.to({y: -300}, 1500, Phaser.Easing.Bounce.Out);
+        upperGate.start();
 
-        // show hud
+        //affiche le menu
         game.add.tween(hud_Group).to({alpha: 1}, 1500, Phaser.Easing.Linear.None, true, 1500);
 
         // Reset level and points
@@ -451,9 +439,9 @@ function gameOver(showScore) {
     lowerGate.to({y: 0}, 1500, Phaser.Easing.Bounce.Out);
     lowerGate.start();
 
-    var raiseGate = game.add.tween(upperGate_Group);
-    raiseGate.to({y: 0}, 1500, Phaser.Easing.Bounce.Out);
-    raiseGate.start();
+    var upperGate = game.add.tween(upperGate_Group);
+    upperGate.to({y: 0}, 1500, Phaser.Easing.Bounce.Out);
+    upperGate.start();
 
     // hide hud
     hud_Group.alpha = 0;
